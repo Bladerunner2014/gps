@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  gps:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0
+    volumes:
+      - .:/gps
+    ports:
+      - "8008:8000"
+
+  redis:
+      image: redis:latest
+      ports:
+        - "6379:6379"
+      environment:
+        - REDIS_PORT=6379
