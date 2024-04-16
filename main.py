@@ -35,13 +35,13 @@ def record_location(gps: dict):
                 "driver_id": gps['data']['driver_id']}
     cache = CacheManager()
 
-    rt = RethinkDBConnection()
+    # rt = RethinkDBConnection()
 
     res = cache.hset(str(gps['plate']), gps['data'])
-    rt.connect()
-    # rt.create_table('geo_data')
-    rt.insert_document(table_name='geo_data', document=document)
-    rt.close()
+    # rt.connect()
+    # # rt.create_table('geo_data')
+    # rt.insert_document(table_name='geo_data', document=document)
+    # rt.close()
 
     return res
 
