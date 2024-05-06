@@ -19,7 +19,7 @@ class CacheManager:
         try:
             pool = redis.ConnectionPool(host=self.config["REDIS_HOST"], port=self.config["REDIS_PORT"],
                                         )
-            self.cache = redis.Redis(connection_pool=pool, decode_responses= True)
+            self.cache = redis.Redis(connection_pool=pool, decode_responses= True, password=self.config["REDIS_PASSWORD"])
 
         except Exception as error:
             # self.logger.error(ErrorMessage.REDIS_CONNECTION)

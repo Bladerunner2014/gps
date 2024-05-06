@@ -67,26 +67,3 @@ class RethinkDBConnection:
         except r.errors.RqlRuntimeError as err:
             print("Geoquery error:", err)
             return []
-
-# if __name__ == "__main__":
-#     # Create an instance of the RethinkDBConnection class
-#     db_connection = RethinkDBConnection()
-#
-#     # Connect to the RethinkDB server
-#     db_connection.connect()
-#
-#     # Example usage: Create a table if it doesn't exist
-#     # db_connection.create_table('people')
-#     #
-#     # # Example usage: Insert a document into a table
-#     # document = {"name": "John", "age": 30}
-#     # db_connection.insert_document('people', document)
-#
-#     # Example usage: Retrieve documents from a table
-#     documents = db_connection.get_documents('people')
-#     doc=db_connection.get_documents_by_key(table_name='people',key='name', value='John')
-#     print("Retrieved documents:", doc)
-#
-#
-#     # Close the connection
-#     db_connection.close()
