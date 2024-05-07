@@ -19,14 +19,15 @@ class CacheManager:
         try:
             pool = redis.ConnectionPool(host=self.config["REDIS_HOST"], port=self.config["REDIS_PORT"],
                                         )
-            self.cache = redis.Redis(connection_pool=pool, decode_responses= True, password=self.config["REDIS_PASSWORD"])
+            self.cache = redis.Redis(connection_pool=pool, decode_responses=True,
+                                     password=self.config["REDIS_PASSWORD"])
 
         except Exception as error:
             # self.logger.error(ErrorMessage.REDIS_CONNECTION)
             # self.logger.error(error)
             raise Exception
 
-    def hget(self, key:str):
+    def hget(self, key: str):
         try:
             value = self.cache.hgetall(key)
         except Exception as error:
@@ -35,9 +36,9 @@ class CacheManager:
             raise Exception
         return value
 
-    def hset(self, key:str, value:dict):
+    def hset(self, key: str, value: dict):
         try:
-            return self.cache.hset(key, mapping= value)
+            return self.cache.hset(key, mapping=value)
         except Exception as error:
             # self.logger.error(ErrorMessage.REDIS_SET)
             # self.logger.error(error)
@@ -50,5 +51,3 @@ class CacheManager:
             # self.logger.error(ErrorMessage.REDIS_DELETE)
             # self.logger.error(error)
             raise Exception
-
-
