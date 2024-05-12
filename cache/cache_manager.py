@@ -23,16 +23,16 @@ class CacheManager:
                                      password=self.config["REDIS_PASSWORD"])
 
         except Exception as error:
-            # self.logger.error(ErrorMessage.REDIS_CONNECTION)
-            # self.logger.error(error)
+            self.logger.error(ErrorMessage.REDIS_CONNECTION)
+            self.logger.error(error)
             raise Exception
 
     def hget(self, key: str):
         try:
             value = self.cache.hgetall(key)
         except Exception as error:
-            # self.logger.error(ErrorMessage.REDIS_GET)
-            # self.logger.error(error)
+            self.logger.error(ErrorMessage.REDIS_GET)
+            self.logger.error(error)
             raise Exception
         return value
 
@@ -40,14 +40,14 @@ class CacheManager:
         try:
             return self.cache.hset(key, mapping=value)
         except Exception as error:
-            # self.logger.error(ErrorMessage.REDIS_SET)
-            # self.logger.error(error)
+            self.logger.error(ErrorMessage.REDIS_SET)
+            self.logger.error(error)
             raise Exception
 
     def delete(self, key):
         try:
             return self.cache.delete(key)
         except Exception as error:
-            # self.logger.error(ErrorMessage.REDIS_DELETE)
-            # self.logger.error(error)
+            self.logger.error(ErrorMessage.REDIS_DELETE)
+            self.logger.error(error)
             raise Exception

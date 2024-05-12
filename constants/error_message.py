@@ -13,6 +13,10 @@ class ErrorMessage:
     DB_PUT_CONNECTION_TO_POOL = "db put connection to pool error"
     DB_SELECT = "db select error"
     DB_DELETE = "document delete failed"
-
+    REDIS_CONNECTION = "redis connection"
+    REDIS_GET = "redis get data"
+    REDIS_SET = "redis set data"
+    REDIS_DELETE = "redis delete data"
+    GET_LIVE_LOCATION = "live location"
     FILE = "File too large"
     ROLE = "User role is not consistent with the request"

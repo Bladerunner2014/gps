@@ -16,3 +16,11 @@ services:
       environment:
         - REDIS_PORT=6379
         - REDIS_PASSWORD= 'kTfmjCzLLSgFnyw2OoGw'
+  mongodb:
+    image: mongo
+    restart: always
+    expose:
+      - "27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME='linkar'
+      - MONGO_INITDB_ROOT_PASSWORD='poiuytrewq'

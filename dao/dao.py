@@ -4,8 +4,12 @@ import pymongo.errors
 from db.db import DBconnect
 import json
 from bson import json_util
+from typing import List, Dict
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
+Time_Interval = Dict[str, datetime]
+Records = List[Dict]
 
 
 class Fleet:
@@ -13,9 +17,9 @@ class Fleet:
     def __init__(self, collection):
         self.db = DBconnect(collection).connect()
 
-    def insert_one(self, query: dict):
+    def insert_one(self, document: dict):
         try:
-            self.db.insert_one(query)
+            self.db.insert_one(document)
         except pymongo.errors as error:
             logger.error(error)
             raise error
@@ -40,11 +44,11 @@ class Fleet:
             logger.error(error)
             raise error
 
-    def update(self, fltr: dict, new_values: dict):
-        newvalues = {"$set": new_values}
+    def update(self, query: dict, new_values: dict):
+        new_values = {"$set": new_values}
 
         try:
-            r = self.db.update_one(fltr, newvalues)
+            r = self.db.update_one(query, new_values)
         except pymongo.errors as error:
             logger.error(error)
             raise error
@@ -65,6 +69,18 @@ class Fleet:
         except pymongo.errors as error:
             logger.error(error)
             raise error
+
+    def find_by_date(self, plate, start_time: int, end_time: int) -> List[dict]:
+        condition = {"plate": plate,
+                     "server_time": {"$gte": start_time, "$lt": end_time}}
+        try:
+            records = self.db.find(condition)
+        except pymongo.errors as error:
+            logger.error(error)
+            raise error
+
+        return self.parse_json(records)
+
 
     @staticmethod
     def parse_json(data):

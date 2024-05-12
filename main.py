@@ -7,7 +7,14 @@ from log import log
 from fastapi.middleware.cors import CORSMiddleware
 from cache.cache_manager import CacheManager
 import json
+from typing import List, Dict
+from datetime import datetime
+
+from constants.info_message import InfoMessage
+from constants.error_message import ErrorMessage
 from manager.manager import GPSManager
+
+Time_Interval = Dict[str, datetime]
 
 app = FastAPI()
 origins = [
@@ -29,7 +36,6 @@ logger = logging.getLogger(__name__)
 def record_location(gps: dict):
     latitude = gps['data']['latitude']
     longitude = gps['data']['longitude']
-    logger.info(gps)
     document = {"plate": gps['plate'], "location": [longitude, latitude],
                 "driver_id": gps['data']['driver_id']}
     cache = CacheManager()
@@ -45,16 +51,27 @@ pass
 @app.get("/gps/{plate}")
 def read_location(plate: str):
     cache = CacheManager()
-    res = cache.hget(plate)
+    try:
+        res = cache.hget(plate)
+        logger.info(InfoMessage.GET_LIVE_LOCATION)
+    except Exception as error:
+        logger.error(ErrorMessage.GET_LIVE_LOCATION)
+        logger.error(error)
+        raise Exception
 
     return ORJSONResponse(content=res, status_code=status.HTTP_200_OK)
 
 
-@app.get("/gps_track/{plate}")
-def track_location(plate: str, date: dict):
+@app.post("/gps/track/")
+def track_location(
+        plate: str, start_time: int, end_time: int
+):
     reader = GPSManager()
-    res = reader.reader(plate=plate, interval=date)
-    return ORJSONResponse(content=res, status_code=status.HTTP_200_OK)
+
+    locations = reader.reader(plate, start_time, end_time)
+    if not locations:
+        raise HTTPException(status_code=404, detail="No locations found for the specified parameters")
+    return locations
 
 
 @app.get("/distance/{plate}")
