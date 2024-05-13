@@ -9,10 +9,10 @@ from cache.cache_manager import CacheManager
 import json
 from typing import List, Dict
 from datetime import datetime
-
+from schemas.schemas import Track
 from constants.info_message import InfoMessage
 from constants.error_message import ErrorMessage
-from manager.manager import GPSManager
+from manager.manager import GPSManager, Distance
 
 Time_Interval = Dict[str, datetime]
 
@@ -43,9 +43,7 @@ def record_location(gps: dict):
     cache.hset(str(gps['plate']), gps['data'])
     recorder = GPSManager()
     recorder.recorder(document)
-
-
-pass
+    return ORJSONResponse(content={"message": InfoMessage.RECORDED}, status_code=status.HTTP_200_OK)
 
 
 @app.get("/gps/{plate}")
@@ -58,25 +56,25 @@ def read_location(plate: str):
         logger.error(ErrorMessage.GET_LIVE_LOCATION)
         logger.error(error)
         raise Exception
-
-    return ORJSONResponse(content=res, status_code=status.HTTP_200_OK)
+    return res
 
 
 @app.post("/gps/track/")
-def track_location(
-        plate: str, start_time: int, end_time: int
-):
+def track_location(track: Track):
     reader = GPSManager()
-
-    locations = reader.reader(plate, start_time, end_time)
+    locations = reader.reader(track)
     if not locations:
-        raise HTTPException(status_code=404, detail="No locations found for the specified parameters")
-    return locations
+        raise HTTPException(status_code=404, detail=ErrorMessage.NOT_FOUND)
+    return ORJSONResponse(content=locations, status_code=status.HTTP_200_OK)
 
 
-@app.get("/distance/{plate}")
-def distance(plate: str, date: dict):
-    pass
+@app.post("/distance/")
+def distance(track: Track):
+    distance_calc = Distance()
+    distance_calc.points_tuple(track=track)
+    distance_calc.calculator()
+
+    return ORJSONResponse(content=distance_calc.distance, status_code=status.HTTP_200_OK)
 
 
 log.setup_logger()

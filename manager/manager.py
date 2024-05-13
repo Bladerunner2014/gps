@@ -3,10 +3,11 @@ from fastapi.responses import ORJSONResponse
 from dotenv import dotenv_values
 import logging
 from dao.dao import Fleet
-from typing import List, Dict
+from typing import List, Dict, Tuple, Any
 from datetime import datetime
 from haversine import haversine, Unit
 from constants.info_message import InfoMessage
+from schemas.schemas import Track
 
 Records = List[Dict]
 
@@ -26,36 +27,29 @@ class GPSManager:
 
         pass
 
-    def reader(self, plate: str, start_time: int, end_time: int) -> List[dict]:
-        res = self.dao.find_by_date(plate=plate, start_time=start_time, end_time=end_time)
-        print("@@@@@@@@@@@@@@@@@@{}".format(res))
+    def reader(self, track: Track) -> List[dict]:
+        res = self.dao.find_by_date(plate=track.plate, start_time=track.start_time, end_time=track.end_time)
         return res
 
 
 class Distance:
-    def __init__(self, plate: str):
+    def __init__(self):
+        self.records = None
+        self.sorted_location_tuples = None
         self.distance = None
-        self.plate = plate
         self.GPS = GPSManager()
 
-    def records(self, start_time: datetime, end_time: datetime) -> Records:
-        records = self.GPS.reader(plate=self.plate, start_time=start_time, end_time=end_time)
-        return records
-
-    def points(self, records: Records) -> list:
-        sorted_records = self.sorter(records=records)
-        return sorted_records
-
-    def sorter(self, records: Records) -> list:
+    def points_tuple(self, track: Track) -> None:
+        self.records = self.GPS.reader(track=track)
+        location_list = [(d['location'][1], d['location'][0], d['server_time']['$date']) for d in self.records]
+        sorted_location_list = sorted(location_list, key=lambda x: x[2])
+        self.sorted_location_tuples = [(t[0], t[1]) for t in sorted_location_list]
         pass
 
-    def points_tuple(self, records: Records) -> list:
-        list_of_tuples = [(d.pop('lat'), d.pop('long')) for d in records]
-        return list_of_tuples
-
-    def calculator(self, points: list) -> None:
+    def calculator(self) -> None:
         self.distance: float = 0
-        for i in range(len(points)):
-            distance_between_two_points = haversine(points[i], points[i + 1])
+        for i in range(len(self.sorted_location_tuples) - 1):
+            distance_between_two_points = haversine(self.sorted_location_tuples[i], self.sorted_location_tuples[i + 1])
             self.distance += distance_between_two_points
         pass
+

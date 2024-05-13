@@ -70,9 +70,8 @@ class Fleet:
             logger.error(error)
             raise error
 
-    def find_by_date(self, plate, start_time: int, end_time: int) -> List[dict]:
-        condition = {"plate": plate,
-                     "server_time": {"$gte": start_time, "$lt": end_time}}
+    def find_by_date(self, plate, start_time: str, end_time: str) -> List[dict]:
+        condition = {"plate": plate}
         try:
             records = self.db.find(condition)
         except pymongo.errors as error:
@@ -80,7 +79,6 @@ class Fleet:
             raise error
 
         return self.parse_json(records)
-
 
     @staticmethod
     def parse_json(data):

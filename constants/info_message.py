@@ -17,5 +17,5 @@ class InfoMessage:
     USER_CREATED = "user created successfully"
     EMAIL = "email sent"
     UPDATE_FORM = "form structure already exists in database, updating form structure."
-
+    RECORDED = "recorded"
     GET_LIVE_LOCATION = "live location"

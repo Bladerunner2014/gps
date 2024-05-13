@@ -1,6 +1,9 @@
+from pydantic import BaseModel
+from typing import Optional
 
-class Post(BaseModel):
-    title: str
-    content: str
-    published: bool = True
-    ratings: Optional[int] = None
+
+class Track(BaseModel):
+    plate: str
+    start_time: str
+    end_time: str
+
