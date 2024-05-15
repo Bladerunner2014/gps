@@ -8,6 +8,7 @@ from datetime import datetime
 from haversine import haversine, Unit
 from constants.info_message import InfoMessage
 from schemas.schemas import Track
+from log import log
 
 Records = List[Dict]
 
@@ -22,8 +23,9 @@ class GPSManager:
 
     def recorder(self, location: dict) -> None:
         location["server_time"] = datetime.now()
-        self.dao.insert_one(document=location)
         logger.info(location)
+
+        self.dao.insert_one(document=location)
 
         pass
 
@@ -53,3 +55,5 @@ class Distance:
             self.distance += distance_between_two_points
         pass
 
+
+log.setup_logger()

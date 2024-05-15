@@ -13,11 +13,13 @@ class DBconnect:
         self.logger = logging.getLogger(__name__)
 
     def connect(self):
-        username = urllib.parse.quote_plus("admin")
-        password = urllib.parse.quote_plus("poiuytrewq")
+        host = config["MONGO_HOST"]
+        username = config["MONGO_USERNAME"]
+        password = config["MONGO_PASSWORD"]
         port = config["MONGO_PORT"]
         try:
-            client = pymongo.MongoClient("mongodb://%s:%s@localhost:%s/" % (username, password, port))
+            client = pymongo.MongoClient(
+                f"mongodb://{username}:{password}@{host}:{port}/{self.database}?authSource=admin")
 
         except Exception as error:
             self.logger.error(error)

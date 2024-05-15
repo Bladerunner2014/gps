@@ -5,7 +5,7 @@ services:
     build: .
     command: uvicorn main:app --host 0.0.0.0
     volumes:
-      - .:/gps
+      - logs:/log
     ports:
       - "8008:8000"
 
@@ -16,11 +16,23 @@ services:
       environment:
         - REDIS_PORT=6379
         - REDIS_PASSWORD= 'kTfmjCzLLSgFnyw2OoGw'
+
   mongodb:
     image: mongo
     restart: always
     expose:
       - "27017"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME='linkar'
+      - MONGO_INITDB_ROOT_USERNAME='admin'
       - MONGO_INITDB_ROOT_PASSWORD='poiuytrewq'
+
+    volumes:
+      - type: bind
+        source: ../data
+        target: /data/db
+
+volumes:
+  mongodb-data:
+  logs:
+
+

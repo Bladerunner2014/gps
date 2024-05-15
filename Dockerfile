@@ -3,7 +3,7 @@ RUN pip install --upgrade pip
 RUN pip cache purge
 RUN apt-get update \
     && apt-get install -y --no-install-recommends
-WORKDIR /waste_management
+WORKDIR /gps
 # install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
