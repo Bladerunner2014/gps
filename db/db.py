@@ -6,7 +6,7 @@ import urllib.parse
 
 class DBconnect:
     def __init__(self, collection):
-        self.database = 'Syb'
+        self.database = 'location'
         self.collection = collection
         self.config = dotenv_values(".env")
         self.logger = logging.getLogger(__name__)
