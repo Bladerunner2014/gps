@@ -3,25 +3,19 @@ import logging
 from dotenv import dotenv_values
 import urllib.parse
 
-config = dotenv_values(".env")
-
 
 class DBconnect:
     def __init__(self, collection):
-        self.database = config["MONGO_DB"]
+        self.database = 'Syb'
         self.collection = collection
+        self.config = dotenv_values(".env")
         self.logger = logging.getLogger(__name__)
 
     def connect(self):
-        host = config["MONGO_HOST"]
-        # username = config["MONGO_USERNAME"]
-        # password = config["MONGO_PASSWORD"]
-        port = config["MONGO_PORT"]
         username = urllib.parse.quote_plus('admin')
         password = urllib.parse.quote_plus('poiuytrewq')
         try:
-            client = pymongo.MongoClient(
-                f"mongodb://{username}:{password}@{host}:{port}/{self.database}?authSource=admin")
+            client = pymongo.MongoClient("mongodb://%s:%s@mongodb/" % (username, password))
 
         except Exception as error:
             self.logger.error(error)
