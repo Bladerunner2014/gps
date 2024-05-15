@@ -14,9 +14,11 @@ class DBconnect:
 
     def connect(self):
         host = config["MONGO_HOST"]
-        username = config["MONGO_USERNAME"]
-        password = config["MONGO_PASSWORD"]
+        # username = config["MONGO_USERNAME"]
+        # password = config["MONGO_PASSWORD"]
         port = config["MONGO_PORT"]
+        username = urllib.parse.quote_plus('admin')
+        password = urllib.parse.quote_plus('poiuytrewq')
         try:
             client = pymongo.MongoClient(
                 f"mongodb://{username}:{password}@{host}:{port}/{self.database}?authSource=admin")
