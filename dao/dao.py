@@ -6,7 +6,7 @@ import json
 from bson import json_util
 from typing import List, Dict
 from datetime import datetime
-
+from schemas import schemas
 logger = logging.getLogger(__name__)
 Time_Interval = Dict[str, datetime]
 Records = List[Dict]
@@ -70,8 +70,8 @@ class Fleet:
             logger.error(error)
             raise error
 
-    def find_by_date(self, plate, start_time: str, end_time: str) -> List[dict]:
-        condition = {"plate": plate}
+    def find_by_date(self, track: schemas.Track) -> List[dict]:
+        condition = {"plate": track.plate, }
         try:
             records = self.db.find(condition)
         except pymongo.errors as error:

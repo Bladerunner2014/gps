@@ -36,8 +36,7 @@ logger = logging.getLogger(__name__)
 def record_location(gps: dict):
     latitude = gps['data']['latitude']
     longitude = gps['data']['longitude']
-    document = {"plate": gps['plate'], "location": [longitude, latitude],
-                "driver_id": gps['data']['driver_id']}
+    document = {"plate": gps['plate'], "location": [longitude, latitude]}
     cache = CacheManager()
 
     cache.hset(str(gps['plate']), gps['data'])
