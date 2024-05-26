@@ -30,7 +30,7 @@ class GPSManager:
         pass
 
     def reader(self, track: Track) -> List[dict]:
-        res = self.dao.find_by_date(plate=track.plate, start_time=track.start_time, end_time=track.end_time)
+        res = self.dao.find_by_date(track=track)
         return res
 
 
