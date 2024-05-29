@@ -20,6 +20,11 @@ class RecordTrack(BaseModel):
     location: List[float]
     recorded_time: str = Field(default=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f"))
 
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.track_id = unique_id.generate_custom_id()
+        self.recorded_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")
+
 
 class LocationData(BaseModel):
     latitude: int = Field(..., description="The latitude value")
